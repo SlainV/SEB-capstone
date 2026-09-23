@@ -1,0 +1,23 @@
+services:
+  
+  db:
+    image: mariadb:11
+    restart: always
+    environment:
+      MYSQL_DATABASE: newsstream_db
+      MYSQL_USER: newsstream_user
+      MYSQL_PASSWORD: strongpassword
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+  
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+    - .:/code
+    ports:
+    - "8000:8000"
+
+volumes:
+  mariadb_data:
