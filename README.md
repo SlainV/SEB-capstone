@@ -60,6 +60,9 @@ After creating the superuser:
 4. Thereafter manage users via the NewsStream Administrator Dashboard (http://localhost:8000/accounts/admin-dashboard/)
 
 # Docker Setup Instructions
+## Installation prerequisites
+docker
+
 - Pull the docker container from the repository with:
 docker pull slainv/newsstream
 
