@@ -28,7 +28,9 @@ def approved_article_log(request):
     :type request: HTTPRequest
 
     :return: HTTP Status code 200 if the request is successful,
+
     otherwise returns a status code 400 with an error message.
+    
     :rtype: HTTPResponse
 
     """

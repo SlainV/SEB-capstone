@@ -7,7 +7,6 @@ from publishers.models import Publisher
 class ArticleSerializer(serializers.ModelSerializer):
     """
     Serializer for approved article data exposed through the REST API.
-
     Converts Article model instances into JSON-friendly representations.
     Related author, publisher, and category objects are represented using
     their string values rather than primary keys.

@@ -1,0 +1,93 @@
+articles package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   articles.migrations
+
+Submodules
+----------
+
+articles.admin module
+---------------------
+
+.. automodule:: articles.admin
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+articles.apps module
+--------------------
+
+.. automodule:: articles.apps
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+articles.forms module
+---------------------
+
+.. automodule:: articles.forms
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+articles.models module
+----------------------
+
+.. automodule:: articles.models
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+articles.serializers module
+---------------------------
+
+.. automodule:: articles.serializers
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+articles.services module
+------------------------
+
+.. automodule:: articles.services
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+articles.tests module
+---------------------
+
+.. automodule:: articles.tests
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+articles.urls module
+--------------------
+
+.. automodule:: articles.urls
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+articles.views module
+---------------------
+
+.. automodule:: articles.views
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: articles
+   :members:
+   :show-inheritance:
+   :undoc-members:

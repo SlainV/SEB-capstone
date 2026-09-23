@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>accounts.views &mdash; newsStream 00.00.01 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d7bb8d4d"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            newsStream
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">newsstream</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">newsStream</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">accounts.views</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for accounts.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">login</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Group</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_object_or_404</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">group_required</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserRegistrationForm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">RoleAssignmentForm</span>
+
+<span class="n">User</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="register">
+<a class="viewcode-back" href="../../accounts.html#accounts.views.register">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Register a new user and assign the Reader role.</span>
+
+<span class="sd">    For GET requests, renders the registration form. For POST requests,</span>
+<span class="sd">    validates the submitted form data and creates a new user account.</span>
+<span class="sd">    Newly registered users are automatically added to the Reader group,</span>
+<span class="sd">    logged in, and redirected to the home page.</span>
+
+<span class="sd">    :param request: The HTTP request containing form data for registration.</span>
+<span class="sd">    :type request: HttpRequest.</span>
+
+<span class="sd">    :returns: A rendered registration template when the form is displayed</span>
+<span class="sd">              or validation fails, otherwise a redirect to the home page.</span>
+<span class="sd">    :rtype: HttpResponse.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">UserRegistrationForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+            <span class="n">reader_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">"Reader"</span>
+            <span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">reader_group</span><span class="p">)</span>
+            <span class="c1"># automatically adds new registrants as readers</span>
+
+            <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"home"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">UserRegistrationForm</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s2">"accounts/register.html"</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">"form"</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="dashboard">
+<a class="viewcode-back" href="../../accounts.html#accounts.views.dashboard">[docs]</a>
+<span class="nd">@login_required</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dashboard</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Shows a dashboard for a specific user based on their assigned role.</span>
+
+<span class="sd">    :param request: The request object coming from the page.</span>
+<span class="sd">    :type request: HttpRequest.</span>
+
+<span class="sd">    :return: The rendered template for the dashboard page.</span>
+<span class="sd">    :rtype: HttpResponse.</span>
+<span class="sd">    """</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"is_admin"</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Administrator"</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+        <span class="s2">"is_publisher_manager"</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Publisher Manager"</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+        <span class="s2">"is_journalist"</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Journalist"</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+        <span class="s2">"is_editor"</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Editor"</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+        <span class="s2">"is_reader"</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Reader"</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s2">"accounts/dashboard.html"</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="editor_area">
+<a class="viewcode-back" href="../../accounts.html#accounts.views.editor_area">[docs]</a>
+<span class="nd">@login_required</span>
+<span class="nd">@group_required</span><span class="p">(</span><span class="s2">"Editor"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">editor_area</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    This function is used to display the dashboard page for editors.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :type request: HTTPRequest.</span>
+<span class="sd">    :return: The rendered Editor page.</span>
+<span class="sd">    :rtype: HttpResponse</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s2">"accounts/editor_area.html"</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="publisher_manager_area">
+<a class="viewcode-back" href="../../accounts.html#accounts.views.publisher_manager_area">[docs]</a>
+<span class="nd">@login_required</span>
+<span class="nd">@group_required</span><span class="p">(</span><span class="s2">"Publisher Manager"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">publisher_manager_area</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s2">"accounts/publisher_manager_area.html"</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="journalist_area">
+<a class="viewcode-back" href="../../accounts.html#accounts.views.journalist_area">[docs]</a>
+<span class="nd">@login_required</span>
+<span class="nd">@group_required</span><span class="p">(</span><span class="s2">"Journalist"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">journalist_area</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s2">"accounts/journalist_area.html"</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="admin_dashboard">
+<a class="viewcode-back" href="../../accounts.html#accounts.views.admin_dashboard">[docs]</a>
+<span class="nd">@login_required</span>
+<span class="nd">@group_required</span><span class="p">(</span><span class="s2">"Administrator"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">admin_dashboard</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Admin dashboard for other user admin functions"""</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"username"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s2">"accounts/admin_dashboard.html"</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">"users"</span><span class="p">:</span> <span class="n">users</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="admin_user_detail">
+<a class="viewcode-back" href="../../accounts.html#accounts.views.admin_user_detail">[docs]</a>
+<span class="nd">@login_required</span>
+<span class="nd">@group_required</span><span class="p">(</span><span class="s2">"Administrator"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">admin_user_detail</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Admin dashboard for other users with functions like assigning roles.</span>
+<span class="sd">    The dashboard is only available to users in the Administrators group.</span>
+
+<span class="sd">    :param request: Request object received from the calling page</span>
+<span class="sd">    :type request: HttpRequest</span>
+
+<span class="sd">    :param user_id: User ID of the user to be displayed</span>
+<span class="sd">    :type user_id: int</span>
+
+<span class="sd">    :return: Render of the Admin dashboard containing users form.</span>
+<span class="sd">    :rtype: HTTPResponse</span>
+<span class="sd">    """</span>
+    <span class="n">user_obj</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span>
+        <span class="n">User</span><span class="p">,</span>
+        <span class="n">pk</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">RoleAssignmentForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">selected_roles</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"roles"</span><span class="p">]</span>
+
+            <span class="n">user_obj</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">user_obj</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">name__in</span><span class="o">=</span><span class="p">[</span>
+                        <span class="s2">"Reader"</span><span class="p">,</span>
+                        <span class="s2">"Journalist"</span><span class="p">,</span>
+                        <span class="s2">"Editor"</span><span class="p">,</span>
+                        <span class="s2">"Publisher Manager"</span><span class="p">,</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">user_obj</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">selected_roles</span><span class="p">)</span>
+
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+                             <span class="s2">"Roles updated successfully."</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">RoleAssignmentForm</span><span class="p">(</span>
+            <span class="n">initial</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"roles"</span><span class="p">:</span> <span class="n">user_obj</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">name__in</span><span class="o">=</span><span class="p">[</span>
+                        <span class="s2">"Reader"</span><span class="p">,</span>
+                        <span class="s2">"Journalist"</span><span class="p">,</span>
+                        <span class="s2">"Editor"</span><span class="p">,</span>
+                        <span class="s2">"Publisher Manager"</span><span class="p">,</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+       <span class="n">request</span><span class="p">,</span>
+       <span class="s2">"accounts/admin_user_detail.html"</span><span class="p">,</span>
+       <span class="p">{</span>
+            <span class="s2">"user_obj"</span><span class="p">:</span> <span class="n">user_obj</span><span class="p">,</span>
+            <span class="s2">"form"</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+       <span class="p">},</span>
+       <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Louw Venter.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>accounts.tests &mdash; newsStream 00.00.01 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d7bb8d4d"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            newsStream
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">newsstream</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">newsStream</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">accounts.tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for accounts.tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Group</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.test</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">User</span>
+
+<span class="c1"># Create your tests here.</span>
+
+
+<div class="viewcode-block" id="AuthenticationTests">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.AuthenticationTests">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AuthenticationTests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">""" Authentication Tests """</span>
+
+<div class="viewcode-block" id="AuthenticationTests.test_dashboard_requires_login">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.AuthenticationTests.test_dashboard_requires_login">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_dashboard_requires_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">""" Test that the dashboard requires login """</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"dashboard"</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+            <span class="mi">302</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="JournalistAccessTests">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.JournalistAccessTests">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">JournalistAccessTests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">""" Journalist Access Tests """</span>
+
+<div class="viewcode-block" id="JournalistAccessTests.test_journalist_can_access_view">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.JournalistAccessTests.test_journalist_can_access_view">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_journalist_can_access_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">""" Test that a journalist can access the journalist area """</span>
+
+        <span class="n">journalist_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Journalist"</span>
+        <span class="p">)</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"journalist"</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+        <span class="p">)</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">journalist_group</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"journalist"</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+        <span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"journalist_area"</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+            <span class="mi">200</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="EditorAccessTests">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.EditorAccessTests">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EditorAccessTests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">""" Editor Access Tests """</span>
+
+<div class="viewcode-block" id="EditorAccessTests.test_non_editor_denied">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.EditorAccessTests.test_non_editor_denied">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_non_editor_denied</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">""" Test that a non-editor is denied access to the editor area """</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"reader"</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"reader"</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+        <span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"editor_area"</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+            <span class="mi">200</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AdminDashboardTests">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.AdminDashboardTests">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AdminDashboardTests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="AdminDashboardTests.setUp">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.AdminDashboardTests.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">""" Set up the test environment """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">admin_group</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Administrator"</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reader_group</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Reader"</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">journalist_group</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Journalist"</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">editor_group</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Editor"</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_manager_group</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Publisher Manager"</span>
+        <span class="p">)</span></div>
+
+
+<span class="w">    </span><span class="sd">""" Admin Dashboard Tests """</span>
+<div class="viewcode-block" id="AdminDashboardTests.test_admin_can_access_dashboard">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.AdminDashboardTests.test_admin_can_access_dashboard">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_admin_can_access_dashboard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">admin_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Administrator"</span>
+        <span class="p">)</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"adminuser"</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span><span class="p">,</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">"adminuser@home.com"</span>
+        <span class="p">)</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">admin_group</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"adminuser"</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+        <span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"admin_dashboard"</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+            <span class="mi">200</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="test_reader_cannot_access_dashboard">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.test_reader_cannot_access_dashboard">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_reader_cannot_access_dashboard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">""" Test that Reader role cannot access admin dashboard """</span>
+    <span class="n">reader_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Reader"</span>
+    <span class="p">)</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"reader"</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+    <span class="p">)</span>
+
+    <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">reader_group</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"reader"</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+    <span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">reverse</span><span class="p">(</span><span class="s2">"admin_dashboard"</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+        <span class="mi">200</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_admin_can_view_user_detail">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.test_admin_can_view_user_detail">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_admin_can_view_user_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Test that an admin can view a user's detail page."""</span>
+    <span class="n">admin_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Administrator"</span>
+    <span class="p">)</span>
+
+    <span class="n">admin</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"admin"</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+    <span class="p">)</span>
+
+    <span class="n">admin</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">admin_group</span><span class="p">)</span>
+
+    <span class="n">target_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"journalist"</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+    <span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"admin"</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+    <span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">reverse</span><span class="p">(</span>
+            <span class="s2">"admin_user_detail"</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">target_user</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+        <span class="mi">200</span>
+    <span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span>
+        <span class="n">response</span><span class="p">,</span>
+        <span class="s2">"journalist"</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_admin_can_assign_role">
+<a class="viewcode-back" href="../../accounts.html#accounts.tests.test_admin_can_assign_role">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_admin_can_assign_role</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">""" Test that an administrator can assign a role to another user. """</span>
+    <span class="n">admin_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Administrator"</span>
+    <span class="p">)</span>
+
+    <span class="n">editor_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Editor"</span>
+    <span class="p">)</span>
+
+    <span class="n">admin</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"admin"</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+    <span class="p">)</span>
+
+    <span class="n">admin</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">admin_group</span><span class="p">)</span>
+
+    <span class="n">target_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"user1"</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+    <span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"admin"</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"testpass123"</span>
+    <span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="n">reverse</span><span class="p">(</span>
+            <span class="s2">"admin_user_detail"</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">target_user</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="p">),</span>
+        <span class="p">{</span>
+            <span class="s2">"roles"</span><span class="p">:</span> <span class="p">[</span><span class="n">editor_group</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">target_user</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+        <span class="n">target_user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Editor"</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Louw Venter.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
