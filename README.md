@@ -64,7 +64,7 @@ After creating the superuser:
 docker
 
 - Pull the docker container from the repository with:
-docker pull slainv/newsstream
+docker pull louwventer/newsstream
 
 - Start the container with:
 docker-compose up -d
