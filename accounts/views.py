@@ -4,7 +4,6 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-
 from django.contrib import messages
 
 from .decorators import group_required
@@ -16,9 +15,21 @@ User = get_user_model()
 
 
 def register(request):
-    """Register a new user.
-    If the form is valid, create a new user and log them in.
-    If the form is invalid, display the registration form again. """
+    """
+    Register a new user and assign the Reader role.
+
+    For GET requests, renders the registration form. For POST requests,
+    validates the submitted form data and creates a new user account.
+    Newly registered users are automatically added to the Reader group,
+    logged in, and redirected to the home page.
+
+    :param request: The HTTP request containing form data for registration.
+    :type request: HttpRequest.
+
+    :returns: A rendered registration template when the form is displayed
+              or validation fails, otherwise a redirect to the home page.
+    :rtype: HttpResponse.
+    """
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
 
@@ -46,13 +57,17 @@ def register(request):
     )
 
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-
-
 @login_required
 def dashboard(request):
-    """Show the dashboard for a specific user."""
+    """
+    Shows a dashboard for a specific user based on their assigned role.
+
+    :param request: The request object coming from the page.
+    :type request: HttpRequest.
+
+    :return: The rendered template for the dashboard page.
+    :rtype: HttpResponse.
+    """
     context = {
         "is_admin": request.user.groups.filter(
             name="Administrator"
@@ -81,6 +96,14 @@ def dashboard(request):
 @login_required
 @group_required("Editor")
 def editor_area(request):
+    """
+    This function is used to display the dashboard page for editors.
+
+    :param request: The HTTP request object.
+    :type request: HTTPRequest.
+    :return: The rendered Editor page.
+    :rtype: HttpResponse
+    """
     return render(
         request,
         "accounts/editor_area.html"
@@ -123,7 +146,19 @@ def admin_dashboard(request):
 @login_required
 @group_required("Administrator")
 def admin_user_detail(request, user_id):
-    """Admin view of other user details"""
+    """
+    Admin dashboard for other users with functions like assigning roles.
+    The dashboard is only available to users in the Administrators group.
+
+    :param request: Request object received from the calling page
+    :type request: HttpRequest
+
+    :param user_id: User ID of the user to be displayed
+    :type user_id: int
+
+    :return: Render of the Admin dashboard containing users form.
+    :rtype: HTTPResponse
+    """
     user_obj = get_object_or_404(
         User,
         pk=user_id,

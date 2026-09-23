@@ -1,39 +1,32 @@
 # Permission helpers
 
-
-# def is_editor(user):
-#    """Check if the current user has editor permissions.
-#    Returns True or False."""
-#    return user.groups.filter(
-#        name="Editor"
-#    ).exists()
-
-
-# def is_journalist(user):
-#    """Check if the current user has journalist permissions.
-#    Returns True or False."""
-#    return user.groups.filter(
-#        name="Journalist"
-#    ).exists()
-
-
-# def is_publisher_manager(user):
-#    """Check if the current user has publisher manager permissions.
-#    Returns True or False."""
-#    return user.groups.filter(
-#        name="Publisher Manager"
-#    ).exists()
-
-
 def has_role(user, role):
-    """Check if the current user has a specific role.
-    Returns True or False."""
+    """
+    Check if the current user has a specific role by checking 
+    if they are a member of the specified role.
+    Returns True if they do and False if they do not.
+
+    :param user: The current user object.
+    :type user: custom Django User object.
+    :param role: The role being checked.
+    :type role: Role object.
+    :return: True or False depending on the outcome.
+    :rtype: bool.
+    """
     return user.groups.filter(
         name=role
     ).exists()
 
 
 def is_reader(user):
+    """
+    Check if the current user has the 'Reader' role.
+
+    :param user: The current user object.
+    :type user: custom Django User object.
+    :return: True if the user has the Reader role, False otherwise.
+    :rtype: bool.
+    """
     return has_role(
         user,
         "Reader"
