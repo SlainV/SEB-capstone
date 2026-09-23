@@ -2,7 +2,7 @@
 
 def has_role(user, role):
     """
-    Check if the current user has a specific role by checking 
+    Check if the current user has a specific role by checking
     if they are a member of the specified role.
     Returns True if they do and False if they do not.
 

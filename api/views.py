@@ -20,7 +20,18 @@ from rest_framework.views import APIView
 @csrf_exempt
 @require_POST
 def approved_article_log(request):
-    """Endpoint to confirm an approved article."""
+    """
+    This endpoint is used to confirm when
+    an article has been approved.
+
+    :param request: Request object
+    :type request: HTTPRequest
+
+    :return: HTTP Status code 200 if the request is successful,
+    otherwise returns a status code 400 with an error message.
+    :rtype: HTTPResponse
+
+    """
     try:
 
         #  if request.method == "POST":
@@ -45,9 +56,9 @@ def approved_article_log(request):
             status=400,
         )
 
-    return JsonResponse({
-        "message": "Approved article endpoint"
-    })
+    # return JsonResponse({
+    #     "message": "Approved article endpoint"
+    # })
 
 
 class ApprovedArticleListAPIView(generics.ListAPIView):

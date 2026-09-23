@@ -5,6 +5,9 @@ from rest_framework.authtoken.models import Token
 
 
 class APITestCase(TestCase):
+    """
+    Test case for API endpoints.
+    """
 
     def test_articles_endpoint_exists(self):
         """ Test that the articles endpoint exists """
@@ -19,6 +22,7 @@ class APITestCase(TestCase):
 
     def test_protected_endpoint_requires_authentication(self):
         """ Test that the protected endpoint requires authentication """
+        
         response = self.client.get(
             reverse("api_protected")
         )
