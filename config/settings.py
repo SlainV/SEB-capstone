@@ -98,7 +98,7 @@ DATABASES = {
         'NAME': 'newsstream_db',                # Your database name
         'USER': 'newsstream_user',                        # Your database user
         'PASSWORD': 'strongpassword',                # Your database password
-        'HOST': 'localhost',                   # Database is hosted on your own machine
+        'HOST': 'db',                   # Database is hosted on your own machine
         'PORT': '',                           # Default MySQL port (3306)
     }
 }
